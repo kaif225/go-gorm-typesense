@@ -1,0 +1,38 @@
+# Binaries for programs and plugins
+*.exe
+*.dll
+*.so
+*.dylib
+*.wasm
+
+# Test binaries
+*_test
+
+# Output of `go build`
+# For projects that build a single binary in the root directory
+# (e.g., a CLI tool)
+# For projects that build multiple binaries in a `bin/` directory
+# /bin/
+
+# Dependency caches
+# Go module cache
+.cache/go-build/
+# Go vendor directory (if used)
+vendor/
+
+# IDE and Editor specific files
+.idea/ # IntelliJ IDEA
+.vscode/ # VS Code
+.DS_Store # macOS
+Thumbs.db # Windows
+
+# Log files
+*.log
+
+# Environment variables
+.env
+.env.*
+
+# Generated files
+# Example: If you generate files with a specific extension
+# *.gen.go
