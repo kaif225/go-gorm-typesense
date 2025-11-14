@@ -26,6 +26,8 @@ func main() {
 		log.Println(err)
 		return
 	}
+	controllers.TypeSenseInitImages()
+	controllers.TypesenseInitUsers()
 	controllers.S3Init()
 
 	router := route.Router()

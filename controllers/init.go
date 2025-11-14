@@ -61,7 +61,7 @@ func TypeSenseInitImages() error {
 	}
 	_, err := database.TypesenseClient.Collection("images").Retrieve(ctx)
 	if err == nil {
-		log.Println("Typesense Schema already exists")
+		log.Println("Typesense Images Schema already exists")
 		return nil
 	}
 	_, err = database.TypesenseClient.Collections().Create(ctx, schema)
@@ -69,7 +69,7 @@ func TypeSenseInitImages() error {
 		log.Println("The Error is :", err)
 		return err
 	}
-	log.Println("Typesense Schema created successfully")
+	log.Println("Typesense Images Schema created successfully")
 
 	return nil
 }
@@ -101,16 +101,12 @@ func TypesenseInitUsers() error {
 				Type: "string",
 				Sort: pointer.True(),
 			}, {
-				Name: "password_changed_at",
-				Type: "string",
-				Sort: pointer.True(),
-			}, {
 				Name: "user_created_at",
 				Type: "string",
 				Sort: pointer.True(),
 			}, {
 				Name: "inactive_status",
-				Type: "string",
+				Type: "bool",
 			}, {
 				Name: "role",
 				Type: "string",
@@ -118,9 +114,9 @@ func TypesenseInitUsers() error {
 		},
 		//DefaultSortingField: pointer.String("category"),
 	}
-	_, err := database.TypesenseClient.Collection("images").Retrieve(ctx)
+	_, err := database.TypesenseClient.Collection("users").Retrieve(ctx)
 	if err == nil {
-		log.Println("Typesense Schema already exists")
+		log.Println("Typesense User Schema already exists")
 		return nil
 	}
 	_, err = database.TypesenseClient.Collections().Create(ctx, schemaUser)

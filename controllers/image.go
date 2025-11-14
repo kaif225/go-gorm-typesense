@@ -113,7 +113,7 @@ func SearchImages(c *gin.Context) {
 	var imageResponse []models.ImageResponse
 	bucket := os.Getenv("BUCKET_NAME")
 	query := c.DefaultQuery("q", "*")
-	category := c.Query("category")
+	//category := c.Query("category")
 	searchParameters := &api.SearchCollectionParams{
 		Q:       pointer.String(query),
 		Infix:   pointer.String("fallback"),
@@ -123,9 +123,9 @@ func SearchImages(c *gin.Context) {
 	}
 
 	// Add category filter if provided
-	if category != "" {
-		searchParameters.FilterBy = pointer.String(fmt.Sprintf("category:=%s", category))
-	}
+	// if category != "" {
+	// 	searchParameters.FilterBy = pointer.String(fmt.Sprintf("category:=%s", category))
+	// }
 
 	searchResult, err := database.TypesenseClient.Collection("images").Documents().Search(context.Background(), searchParameters)
 

@@ -48,21 +48,31 @@ func SyncSchemasImages(c *gin.Context) {
 			continue
 		}
 
-		err = database.DB.Model(&models.Images{}).Where("id = ?", img.ID).
-			Update("typesense_synced", true).Error
+		// err = database.DB.Model(&models.Images{}).Where("id = ?", img.ID).
+		// 	Update("typesense_synced", true).Error
+
+		// if err != nil {
+		// 	log.Printf("Falied to update sync status for document %s, %v\n", strconv.Itoa(img.ID), err)
+		// 	return
+		// }
+		// synced++
+		tx := database.DB.Begin()
+		err = tx.Model(&models.Images{}).Where("id = ?", img.ID).Update("typesense_synced", true).Error
 
 		if err != nil {
-			log.Printf("Falied to update sync status for document %s, %v\n", strconv.Itoa(img.ID), err)
-			return
+			tx.Rollback()
+			failed++
+			continue
 		}
-		synced++
 
-		c.JSON(200, gin.H{
-			"message": "Sync completed",
-			"synced":  synced,
-			"failed":  failed,
-		})
+		tx.Commit()
+
 	}
+	c.JSON(200, gin.H{
+		"message": "Sync completed",
+		"synced":  synced,
+		"failed":  failed,
+	})
 }
 
 func SyncSchemasUsers(c *gin.Context) {
@@ -77,7 +87,7 @@ func SyncSchemasUsers(c *gin.Context) {
 	}
 
 	if len(users) == 0 {
-		c.JSON(200, gin.H{"message": "All documents are already synced"})
+		c.JSON(http.StatusOK, gin.H{"message": "All documents are already synced"})
 		return
 	}
 
@@ -101,21 +111,31 @@ func SyncSchemasUsers(c *gin.Context) {
 			continue
 		}
 
-		err = database.DB.Model(&models.Users{}).Where("id = ?", user.ID).
-			Update("typesense_synced", true).Error
+		// err = database.DB.Model(&models.Users{}).Where("id = ?", user.ID).
+		// 	Update("typesense_synced", true).Error
+
+		// if err != nil {
+		// 	log.Printf("Falied to update sync status for document %s, %v\n", strconv.Itoa(user.ID), err)
+		// 	return
+		// }
+		// synced++
+
+		tx := database.DB.Begin()
+		err = tx.Model(&models.Users{}).Where("id = ?", user.ID).Update("typesense_synced", true).Error
 
 		if err != nil {
-			log.Printf("Falied to update sync status for document %s, %v\n", strconv.Itoa(user.ID), err)
-			return
+			tx.Rollback()
+			failed++
+			continue
 		}
-		synced++
 
-		c.JSON(200, gin.H{
-			"message": "Sync completed",
-			"synced":  synced,
-			"failed":  failed,
-		})
+		tx.Commit()
 	}
+	c.JSON(200, gin.H{
+		"message": "Sync completed",
+		"synced":  synced,
+		"failed":  failed,
+	})
 }
 
 // func ResetSchemaSync(c *gin.Context) {
