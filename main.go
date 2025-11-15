@@ -5,13 +5,12 @@ import (
 	"psql-typesense/controllers"
 	"psql-typesense/database"
 	"psql-typesense/route"
-
-	"github.com/joho/godotenv"
+	"psql-typesense/utils"
 )
 
 func main() {
-
-	err := godotenv.Load()
+	err := utils.LoadVaultSecretsWithRetry("/vault/secrets/secrets.txt", 5)
+	//err := godotenv.Load()
 	if err != nil {
 		log.Println(err)
 		return
