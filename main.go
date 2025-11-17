@@ -6,10 +6,12 @@ import (
 	"psql-typesense/database"
 	"psql-typesense/route"
 	"psql-typesense/utils"
+
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	err := utils.LoadVaultSecretsWithRetry("/vault/secrets/secrets.txt", 5)
+	err := utils.LoadVaultSecretsWithRetry(".env", 5)
 	//err := godotenv.Load()
 	if err != nil {
 		log.Println(err)
@@ -29,7 +31,9 @@ func main() {
 	controllers.TypesenseInitUsers()
 	controllers.S3Init()
 
-	router := route.Router()
+	router := gin.Default()
+	route.Protected(router)
+	route.Unproctected(router)
 
 	router.Run(":8007")
 }
